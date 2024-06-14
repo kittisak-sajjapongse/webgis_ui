@@ -45,8 +45,8 @@
                     }
                 ]
             },
-            center: [100.616923, 13.825731], // starting position [lng, lat]
-            zoom: 15 // starting zoom
+            center: [-73.994004, 40.722822], // starting position [lng, lat]
+            zoom: 10 // starting zoom
         });
 
         // Add zoom and rotation controls to the map.
@@ -55,7 +55,7 @@
         // WFS URL for GeoServer
         const workspace = 'tiger';
         const layer = 'poi';
-        const wfsUrl = `http://localhost:8080/geoserver/{workspace}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName={layer}&outputFormat=application/json`;
+        const wfsUrl = `http://localhost:8080/geoserver/${workspace}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${layer}&outputFormat=application/json`;
 
         // Fetch GeoJSON data from the WFS service
         fetch(wfsUrl)
@@ -71,12 +71,12 @@
                 // Add a layer to use the new source
                 map.addLayer({
                     'id': 'wfs-layer',
-                    'type': 'fill', // change to 'line' or 'symbol' depending on your data
+                    'type': 'circle', // change to 'line' or 'symbol' depending on your data
                     'source': 'wfs-layer',
-                    'layout': {},
-                    'paint': {
-                        'fill-color': '#088', // color for the shapes
-                        'fill-opacity': 0.5 // opacity for the shapes
+                    paint: {
+                        "circle-color": "hsla(0,0%,0%,0.75)",
+                        "circle-stroke-width": 1.5,
+                        "circle-stroke-color": "white",
                     }
                 });
             })

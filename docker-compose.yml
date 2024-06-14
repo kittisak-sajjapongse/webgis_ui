@@ -41,7 +41,7 @@ services:
     image: docker.osgeo.org/geoserver:2.25.1
     container_name: geoserver
     environment:
-      - SKIP_DEMO_DATA=true
+      - SKIP_DEMO_DATA=false
       - ROOT_WEBAPP_REDIRECT=true
       - CORS_ENABLED=true
     volumes:

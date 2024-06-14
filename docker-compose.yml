@@ -1,0 +1,55 @@
+version: "3.2"
+
+networks:
+  gis_network:
+    name: gis_network
+    driver: bridge
+
+services:
+  gis-db:
+    image: postgis/postgis:13-master
+    container_name: gis-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=geoserver
+      - POSTGRES_DB=gis-db
+    volumes:
+      - ./container_data/gis-db/data:/var/lib/postgresql/data/
+    networks:
+      - gis_network
+    ports:
+      - 5432:5432
+    restart: always
+
+  db-admin:
+    image: dpage/pgadmin4
+    container_name: db-admin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=geoserver
+    volumes:
+      - ./container_data/pgadmin/servers.json:/pgadmin4/servers.json
+    networks:
+      - gis_network
+    ports:
+      - 80:80
+    depends_on:
+      - gis-db
+    restart: always
+
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.25.1
+    container_name: geoserver
+    environment:
+      - SKIP_DEMO_DATA=true
+      - ROOT_WEBAPP_REDIRECT=true
+      - CORS_ENABLED=true
+    volumes:
+      - ./container_data/geoserver/:/opt/geoserver_data/
+    networks:
+      - gis_network
+    ports:
+      - 8080:8080
+    depends_on:
+      - gis-db
+    restart: always
